@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Catalyst-Model-Sedna.t
+lib/Catalyst/Model/Sedna.pm
