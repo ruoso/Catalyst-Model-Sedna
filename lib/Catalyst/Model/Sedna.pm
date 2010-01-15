@@ -1,81 +1,73 @@
 package Catalyst::Model::Sedna;
+use Sedna;
+use Moose;
 
-use 5.010000;
-use strict;
-use warnings;
+extends 'Catalyst::Model';
 
-require Exporter;
-use AutoLoader qw(AUTOLOAD);
+has 'conn' => (is => 'rw',
+               isa => 'Sedna',
+               handles => [ 'execute',
+                            'begin',
+                            'rollback',
+                            'getData' ]);
 
-our @ISA = qw(Exporter);
+sub new {
+  my $self = shift;
+  $self = $self->SUPER::new(@_);
+  my ($c, $config) = @_;
 
-# Items to export into callers namespace by default. Note: do not export
-# names by default without a very good reason. Use EXPORT_OK instead.
-# Do not simply export all your public functions/methods/constants.
+  my $conn =
+    Sedna->new($config->{url},
+               $config->{db_name},
+               $config->{login},
+               $config->{password});
 
-# This allows declaration	use Catalyst::Model::Sedna ':all';
-# If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
-# will save memory.
-our %EXPORT_TAGS = ( 'all' => [ qw(
-	
-) ] );
+  $conn->setConnectionAttr(%{$config->{attr}})
+    if $config->{attr};
 
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
+  $self->conn($conn);
+  return $self;
+}
 
-our @EXPORT = qw(
-	
-);
+sub get_item {
+  my $self = shift;
+  if ($self->conn->next) {
+    my $buf = ' 'x1024; # create the scalar in the size we want.
+    my $ret = '';
+    while (my $read = $self->conn->getData($buf, 1024)) {
+      $ret .= substr($buf,0,$read);
+    }
+    return $ret;
+  } else {
+    return;
+  }
+}
 
-our $VERSION = '0.01';
 
-require XSLoader;
-XSLoader::load('Catalyst::Model::Sedna', $VERSION);
+42;
 
-# Preloaded methods go here.
-
-# Autoload methods go after =cut, and are processed by the autosplit program.
-
-1;
 __END__
-# Below is stub documentation for your module. You'd better edit it!
 
 =head1 NAME
 
-Catalyst::Model::Sedna - Perl extension for blah blah blah
+Catalyst::Model::Sedna - Access the Sedna XML Database
 
 =head1 SYNOPSIS
 
-  use Catalyst::Model::Sedna;
-  blah blah blah
+  TODO
 
 =head1 DESCRIPTION
 
-Stub documentation for Catalyst::Model::Sedna, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
-
-Blah blah blah.
-
-=head2 EXPORT
-
-None by default.
-
-
+This module will manage a connection to the sedna database and perform
+queries. The connection attributes are set in the config file.
 
 =head1 SEE ALSO
 
-Mention other useful documentation such as the documentation of
-related modules or operating system documentation (such as man pages
-in UNIX), or any relevant external documentation such as RFCs or
-standards.
-
-If you have a mailing list set up for your module, mention it here.
-
-If you have a web site set up for your module, mention it here.
+See the Sedna documentation, and also the Sedna bindings.
 
 =head1 AUTHOR
 
-Daniel Ruoso, E<lt>ruoso@E<gt>
+Daniel Ruoso, E<lt>daniel@ruoso.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
@@ -84,6 +76,5 @@ Copyright (C) 2010 by Daniel Ruoso
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,
 at your option, any later version of Perl 5 you may have available.
-
 
 =cut
