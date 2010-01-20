@@ -17,7 +17,7 @@ sub new {
   my ($c, $config) = @_;
 
   my $conn =
-    Sedna->new($config->{url},
+    Sedna->connect($config->{url},
                $config->{db_name},
                $config->{login},
                $config->{password});
