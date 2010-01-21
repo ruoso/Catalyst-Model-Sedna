@@ -9,7 +9,9 @@ has 'conn' => (is => 'rw',
                handles => [ 'execute',
                             'begin',
                             'rollback',
-                            'getData' ]);
+                            'getData',
+                            'next',
+                            'commit']);
 
 sub new {
   my $self = shift;
