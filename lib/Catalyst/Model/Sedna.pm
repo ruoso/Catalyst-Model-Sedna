@@ -37,6 +37,7 @@ sub get_item {
         $buf = ' 'x1024;
         while (my $read = $self->conn->getData($buf, 1024)) {
             $ret .= substr($buf,0,$read);
+            $buf = ' 'x1024;
         }
         return $ret;
     } else {
