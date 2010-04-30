@@ -33,13 +33,7 @@ sub BUILDARGS {
 sub get_item {
     my $self = shift;
     if ($self->conn->next) {
-        my ($buf,$ret);
-        $buf = ' 'x1024;
-        while (my $read = $self->conn->getData($buf, 1024)) {
-            $ret .= substr($buf,0,$read);
-            $buf = ' 'x1024;
-        }
-        return $ret;
+        return $self->conn->getItem;
     } else {
         return;
     }
