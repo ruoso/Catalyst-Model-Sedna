@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile
   ( NAME              => 'Catalyst::Model::Sedna',
     VERSION_FROM      => 'lib/Catalyst/Model/Sedna.pm',
-    PREREQ_PM         => { Sedna => 0 },
+    PREREQ_PM         => { Sedna => 0.002 },
     ($] >= 5.005 ?
      (ABSTRACT_FROM  => 'lib/Catalyst/Model/Sedna.pm',
       AUTHOR         => 'Daniel Ruoso <daniel@ruoso.com>') : ()),
