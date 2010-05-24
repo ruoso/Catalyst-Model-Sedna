@@ -2,7 +2,7 @@ package Catalyst::Model::Sedna;
 use Sedna;
 use Moose;
 
-our $VERSION = 0.003;
+our $VERSION = 0.004;
 
 extends 'Catalyst::Model';
 has 'conn' => (is => 'ro',
